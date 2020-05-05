@@ -2,6 +2,8 @@ import time
 import torch.optim as optim
 from torch.autograd import Variable
 from precision import *
+import numpy as np
+import matplotlib.pyplot as plt
 
 from __main__ import *
 

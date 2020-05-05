@@ -1,4 +1,6 @@
 from __main__ import *
+import numpy as np
+import matplotlib.pyplot as plt
 
 def precisionget(predicted,labels,indi, tots):
     p=int(predicted)
