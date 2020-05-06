@@ -35,8 +35,7 @@ def main(prgRun):
         np.random.seed(seed)
         torch.manual_seed(seed)
 
-        classes = ('0 plane', '1 car', '2 bird', '3 cat', '4 deer', '5 dog',
-                   '6 frog', '7 horse', '8 ship', '9 truck')
+        classes = ('0 cat', '1 dog')
 
         train_loader = torch.utils.data.DataLoader(
             torchvision.datasets.CIFAR10('./cifardata', train=True, download=True,
