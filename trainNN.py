@@ -4,6 +4,7 @@ from torch.autograd import Variable
 from precision import *
 import numpy as np
 import matplotlib.pyplot as plt
+import winsound
 
 from __main__ import *
 
@@ -18,6 +19,7 @@ def trainNN(net, batch_size, epochs, lr,train_loader,test_loader, classes):
     print("epochs: ", epochs)
     print("learning rate: ", lr)
     print("############################################")
+    winsound.Beep(1000, 500)
 
     n_batches = len(train_loader)
 
@@ -57,12 +59,10 @@ def trainNN(net, batch_size, epochs, lr,train_loader,test_loader, classes):
 
             inputs, labels = Variable(inputs), Variable(labels)
 
-            print(inputs.shape)
+            # print(inputs.shape)
 
             ValO = net(inputs)
 
-            print(ValO.shape)
-            print(labels.shape)
             LossVal = loss(ValO, labels)
             ValidationTotalLoss += LossVal.data
             ValLossOut=float(ValidationTotalLoss / len(train_loader))
@@ -70,6 +70,7 @@ def trainNN(net, batch_size, epochs, lr,train_loader,test_loader, classes):
         trialVset.append(trials)
         lossVset.append(ValLossOut)
         print("Validation loss: ", ValLossOut)
+        winsound.Beep(2500, 250)
 
         # if valcount>1:
         #     if ValLossOutP<ValLossOut:
@@ -164,7 +165,7 @@ def trainNN(net, batch_size, epochs, lr,train_loader,test_loader, classes):
     print("Individual Reporting:", PR)
     print("Average Correct Percent:", np.sum(PR) / len(TotTest))
     print("Test Confusion Table")
-    _, top = torch.topk(TestO, 3)
+    _, top = torch.topk(TestO, 2)
     print(top)
     print(predicted)
     print(labels)

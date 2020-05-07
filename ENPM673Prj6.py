@@ -12,6 +12,7 @@ import torchvision
 print(torchvision.__version__)
 import torchvision.transforms as transforms
 from torch.utils.data.dataset import Dataset
+import helper
 
 from CNNBuild import *
 from trainNN import *
@@ -68,15 +69,16 @@ def main(prgRun):
         #
         data_dir = './dogs-vs-cats'
 
+        imagesize = 5
+
         train_transforms = transforms.Compose([transforms.RandomRotation(30),
-                                               transforms.RandomResizedCrop(224),
+                                               transforms.Resize((imagesize, imagesize), interpolation=2),
                                                transforms.RandomHorizontalFlip(),
                                                transforms.ToTensor(),
                                                transforms.Normalize([0.485, 0.456, 0.406],
                                                                     [0.229, 0.224, 0.225])])
 
-        test_transforms = transforms.Compose([transforms.Resize(255),
-                                              transforms.CenterCrop(224),
+        test_transforms = transforms.Compose([transforms.Resize((imagesize, imagesize), interpolation=2),
                                               transforms.ToTensor(),
                                               transforms.Normalize([0.485, 0.456, 0.406],
                                                                    [0.229, 0.224, 0.225])])
@@ -85,12 +87,20 @@ def main(prgRun):
         test_data = datasets.ImageFolder(data_dir + '/test1/', transform=test_transforms)
         train_data = datasets.ImageFolder(data_dir + '/train/', transform=train_transforms)
 
-
         train_loader = torch.utils.data.DataLoader(train_data, batch_size=64, shuffle=True)
-        test_loader = torch.utils.data.DataLoader(test_data, batch_size=64)
+        test_loader = torch.utils.data.DataLoader(test_data, batch_size=64, shuffle=True)
+
+        # data_iter = iter(train_loader)
+        #
+        # images, labels = next(data_iter)
+        # fig, axes = plt.subplots(figsize=(10, 10), ncols=4)
+        #
+        # image=images[0].permute(1, 2, 0).numpy()
+        #
+        # cv2.imshow('image',image)
 
         CNN = CNNBuild()
-        trainNN(CNN, batch_size=128, epochs=36, lr=.1, train_loader=train_loader, test_loader=test_loader,
+        trainNN(CNN, batch_size=128, epochs=2, lr=.1, train_loader=train_loader, test_loader=test_loader,
                 classes=classes)
 
         prgRun = False
