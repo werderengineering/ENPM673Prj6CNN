@@ -54,7 +54,9 @@ class CustomDatasetFromFile(Dataset):
         # Add channel dimension, dim = 1x28x28
         # Note: You do not need to do this if you are reading RGB images
         # or i there is already channel dimension
-        im_as_np = np.expand_dims(im_as_np, 0)
+        # print(im_as_np.shape)
+        # im_as_np = np.expand_dims(im_as_np, 0)
+        # print(im_as_np.shape)
         # Some preprocessing operations on numpy array
         # ...
         # ...
@@ -62,9 +64,10 @@ class CustomDatasetFromFile(Dataset):
 
         # Transform image to tensor, change data type
         im_as_ten = torch.from_numpy(im_as_np).float()
+        # print(im_as_ten.shape)
 
         # Get label(class) of the image based on the file name
-        class_indicator_location = single_image_path.rfind('_c')
+        # class_indicator_location = single_image_path.rfind('_c')
         # label = int(single_image_path[class_indicator_location+2:class_indicator_location+3])
 
         return (im_as_ten, labelval)

@@ -53,7 +53,11 @@ def trainNN(net, batch_size, epochs, lr,train_loader,test_loader, classes):
         print("Validating...")
         ValidationTotalLoss = 0
         for inputs, labels in train_loader:
+
+
             inputs, labels = Variable(inputs), Variable(labels)
+
+            print(inputs.shape)
 
             ValO = net(inputs)
             LossVal = loss(ValO, labels)
