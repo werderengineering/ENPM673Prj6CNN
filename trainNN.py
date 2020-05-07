@@ -60,6 +60,9 @@ def trainNN(net, batch_size, epochs, lr,train_loader,test_loader, classes):
             print(inputs.shape)
 
             ValO = net(inputs)
+
+            print(ValO.shape)
+            print(labels.shape)
             LossVal = loss(ValO, labels)
             ValidationTotalLoss += LossVal.data
             ValLossOut=float(ValidationTotalLoss / len(train_loader))

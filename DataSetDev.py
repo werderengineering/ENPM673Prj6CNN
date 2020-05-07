@@ -42,6 +42,8 @@ class CustomDatasetFromFile(Dataset):
 
         else:
             print('ERROR in LABEL')
+
+        labelval=torch.tensor(labelval)
         # Open image
         im_as_im = Image.open(single_image_path)
 
