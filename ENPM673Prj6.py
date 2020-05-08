@@ -1,6 +1,8 @@
 import numpy as np
 import torch
 import pandas as pd
+import re
+import shutil
 
 import os
 
@@ -16,7 +18,7 @@ import helper
 
 from CNNBuild import *
 from trainNN import *
-from DataSetDev import CustomDatasetFromFile
+from FileDev import *
 
 from torchvision import datasets
 import torchvision.transforms as transforms
@@ -68,15 +70,10 @@ def main(prgRun):
         #                                           shuffle=True)
         #
         data_dir = './dogs-vs-cats'
-
         train_dir = "./dogs-vs-cats/train"
-        train_dogs_dir = f'{train_dir}/dogs'
-        train_cats_dir = f'{train_dir}/cats'
-        #############################################
+        subdir = '/train'
+        SubDirectories(train_dir, subdir)
 
-        # Find a way to create the subdirectories here.
-
-        #############################################
         imagesize = 5
 
         train_transforms = transforms.Compose([transforms.RandomRotation(30),
@@ -96,23 +93,16 @@ def main(prgRun):
         train_data = datasets.ImageFolder(data_dir + '/train/', transform=train_transforms)
 
         train_loader = torch.utils.data.DataLoader(train_data, batch_size=len(train_data), shuffle=True)
-        test_loader = torch.utils.data.DataLoader(test_data, batch_size=len(test_data), shuffle=True)
-
-        # data_iter = iter(train_loader)
-        #
-        # images, labels = next(data_iter)
-        # fig, axes = plt.subplots(figsize=(10, 10), ncols=4)
-        #
-        # image=images[0].permute(1, 2, 0).numpy()
-        #
-        # cv2.imshow('image',image)
+        test_loader = torch.utils.data.DataLoader(test_data, batch_size=64, shuffle=True)
 
         CNN = CNNBuild()
         trainNN(CNN, batch_size=1028, epochs=2, lr=.1, train_loader=train_loader, test_loader=test_loader,
                 classes=classes)
 
-        prgRun = False
-        return prgRun
+        getdataYN = str.lower(input('Create a data set? Enter |yes| or |no|: '))
+        if getdataYN == 'yes' or getdataYN == 'y':
+            print('Please wait for the program to restore all the files')
+            restoreSubdirectories(train_dir, subdir)
 
         prgRun = False
         return prgRun
