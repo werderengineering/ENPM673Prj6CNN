@@ -153,12 +153,10 @@ def trainNN(net, batch_size, epochs, lr,train_loader,test_loader, classes):
             predictedi = predicted[i]
             labelsi = labels[i]
 
-            print("Predicted Labels: ", classes[predictedi])
-            print("Test Label: ", classes[labelsi])
+            # print("Predicted Labels: ", classes[predictedi])
+            # print("Test Label: ", classes[labelsi])
 
             indiTest, TotTest, PR = precisionget(predictedi, labelsi, indiTest, TotTest)
-
-
 
     print('\nTest Accuracy Results:\n')
     print("Total trials on each: ", TotTest)
@@ -166,9 +164,10 @@ def trainNN(net, batch_size, epochs, lr,train_loader,test_loader, classes):
     print("Average Correct Percent:", np.sum(PR) / len(TotTest))
     print("Test Confusion Table")
     _, top = torch.topk(TestO, 2)
-    print(top)
-    print(predicted)
-    print(labels)
+    # print(top)
+    # print(predicted)
+    # print(labels)
+    winsound.Beep(2500, 1000)
 
     plt.plot(trialTset, lossTset)
     plt.title('Training Cross entropy loss')
