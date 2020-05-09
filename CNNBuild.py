@@ -17,7 +17,7 @@ class CNNBuild(NN.Module):
         self.conv1 = NN.Conv2d(3, 18, 3, 1, 1)
         self.conv2 = NN.Conv2d(18, 128, 5, 1)
         self.pool = NN.MaxPool2d(2, 2, 0)
-        self.fc1 = NN.Linear(18 * 2 * 2, 2304)
+        self.fc1 = NN.Linear(18 * 15 * 15, 2304)
         self.fc2 = NN.Linear(2304, 2)
 
     def forward(self, x):
@@ -35,7 +35,7 @@ class CNNBuild(NN.Module):
 
         # print(x.shape)
         try:
-            x = x.view(-1, 18 * 2 * 2)
+            x = x.view(-1, 18 * 15 * 15)
         except:
             print('Size mismatch correct view to have multiple of last 3 parameters', x.shape)
             sys.exit()

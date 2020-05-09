@@ -35,10 +35,7 @@ prgRun = True
 
 def main(prgRun):
     if __name__ == '__main__':
-        # DCTrain = \
-        #     CustomDatasetFromFile('dogs-vs-cats/train/')
-        # DCTest = \
-        #     CustomDatasetFromFile('dogs-vs-cats/test1/')
+
 
         seed = 1
         np.random.seed(seed)
@@ -74,7 +71,8 @@ def main(prgRun):
         subdir = '/train'
         SubDirectories(train_dir, subdir)
 
-        imagesize = 5
+        # More information the higher the number, max around 230
+        imagesize = 30
 
         train_transforms = transforms.Compose([transforms.RandomRotation(30),
                                                transforms.Resize((imagesize, imagesize), interpolation=2),
@@ -92,14 +90,34 @@ def main(prgRun):
         test_data = datasets.ImageFolder(data_dir + '/test1/', transform=test_transforms)
         train_data = datasets.ImageFolder(data_dir + '/train/', transform=train_transforms)
 
-        train_loader = torch.utils.data.DataLoader(train_data, batch_size=len(train_data), shuffle=True)
-        test_loader = torch.utils.data.DataLoader(test_data, batch_size=64, shuffle=True)
+        trainBatch = int(len(test_data) * .3)
+        testBatch = int(len(test_data) * .01)
+
+        train_loader = torch.utils.data.DataLoader(train_data, batch_size=trainBatch, shuffle=True)
+        test_loader = torch.utils.data.DataLoader(test_data, batch_size=testBatch, shuffle=True)
 
         CNN = CNNBuild()
-        trainNN(CNN, batch_size=1028, epochs=2, lr=.1, train_loader=train_loader, test_loader=test_loader,
+        loadModel = str.lower(input('\nLoad a model? Enter |yes| or |no|: '))
+        if loadModel == 'yes' or loadModel == 'y':
+            name = str.lower(input('Enter the entire name: '))
+            CNN.load_state_dict(torch.load(name))
+            CNN.eval()
+            print('Model loaded')
+
+        else:
+            trainNN(CNN, batch_size=trainBatch, epochs=64, lr=.1, train_loader=train_loader, test_loader=test_loader,
+                    classes=classes)
+
+        print('\nTesting Model')
+        testCNN(CNN, batch_size=testBatch, epochs=1, lr=.1, train_loader=train_loader, test_loader=test_loader,
                 classes=classes)
 
-        getdataYN = str.lower(input('Create a data set? Enter |yes| or |no|: '))
+        saveModelYN = str.lower(input('\nSave the model? Enter |yes| or |no|: '))
+        if saveModelYN == 'yes' or saveModelYN == 'y':
+            name = str.lower(input('Enter a name: '))
+            torch.save(CNN.state_dict(), 'model' + name + '.pth')
+
+        getdataYN = str.lower(input('\nRestore folders? Enter |yes| or |no|: '))
         if getdataYN == 'yes' or getdataYN == 'y':
             print('Please wait for the program to restore all the files')
             restoreSubdirectories(train_dir, subdir)
