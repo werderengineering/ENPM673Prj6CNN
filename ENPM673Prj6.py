@@ -36,7 +36,6 @@ prgRun = True
 def main(prgRun):
     if __name__ == '__main__':
 
-
         seed = 1
         np.random.seed(seed)
         torch.manual_seed(seed)
@@ -68,6 +67,7 @@ def main(prgRun):
         #
         data_dir = './dogs-vs-cats'
         train_dir = "./dogs-vs-cats/train"
+        test_dir = "./dogs-vs-cats/test1/test1"
         subdir = '/train'
         SubDirectories(train_dir, subdir)
 
@@ -91,31 +91,35 @@ def main(prgRun):
         train_data = datasets.ImageFolder(data_dir + '/train/', transform=train_transforms)
 
         trainBatch = int(len(test_data) * .3)
-        testBatch = int(len(test_data) * .01)
+        trainBatch = 64
+
+        testBatch = int(len(test_data))
 
         train_loader = torch.utils.data.DataLoader(train_data, batch_size=trainBatch, shuffle=True)
-        test_loader = torch.utils.data.DataLoader(test_data, batch_size=testBatch, shuffle=True)
+        test_loader = torch.utils.data.DataLoader(test_data, batch_size=testBatch, shuffle=False)
 
         CNN = CNNBuild()
         loadModel = str.lower(input('\nLoad a model? Enter |yes| or |no|: '))
         if loadModel == 'yes' or loadModel == 'y':
             name = str.lower(input('Enter the entire name: '))
+            if name == '':
+                name = 'model12810x10.1lr.pth'
             CNN.load_state_dict(torch.load(name))
             CNN.eval()
-            print('Model loaded')
+            print('Model loaded: ', name)
 
         else:
-            trainNN(CNN, batch_size=trainBatch, epochs=64, lr=.1, train_loader=train_loader, test_loader=test_loader,
+            trainNN(CNN, batch_size=trainBatch, epochs=128, lr=.1, train_loader=train_loader, test_loader=test_loader,
                     classes=classes)
+
+            saveModelYN = str.lower(input('\nSave the model? Enter |yes| or |no|: '))
+            if saveModelYN == 'yes' or saveModelYN == 'y':
+                name = str.lower(input('Enter a name: '))
+                torch.save(CNN.state_dict(), 'model' + name + '.pth')
 
         print('\nTesting Model')
         testCNN(CNN, batch_size=testBatch, epochs=1, lr=.1, train_loader=train_loader, test_loader=test_loader,
-                classes=classes)
-
-        saveModelYN = str.lower(input('\nSave the model? Enter |yes| or |no|: '))
-        if saveModelYN == 'yes' or saveModelYN == 'y':
-            name = str.lower(input('Enter a name: '))
-            torch.save(CNN.state_dict(), 'model' + name + '.pth')
+                classes=classes, directory=test_dir)
 
         getdataYN = str.lower(input('\nRestore folders? Enter |yes| or |no|: '))
         if getdataYN == 'yes' or getdataYN == 'y':

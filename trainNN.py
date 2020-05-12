@@ -6,6 +6,10 @@ from precision import *
 import numpy as np
 import matplotlib.pyplot as plt
 import winsound
+from imageFileNames import *
+import cv2
+
+font = cv2.FONT_HERSHEY_SIMPLEX
 
 from __main__ import *
 
@@ -150,7 +154,7 @@ def trainNN(net, batch_size, epochs, lr, train_loader, test_loader, classes):
     plt.show()
 
 
-def testCNN(net, batch_size, epochs, lr, train_loader, test_loader, classes):
+def testCNN(net, batch_size, epochs, lr, train_loader, test_loader, classes, directory):
     # test_loader = torch.utils.data.DataLoader(test_set, batch_size=32, sampler=test_sampler, num_workers=2)
     indiTest = np.zeros(len(classes))
     TotTest = np.zeros(len(classes))
@@ -180,5 +184,22 @@ def testCNN(net, batch_size, epochs, lr, train_loader, test_loader, classes):
     print("Test Confusion Table")
     _, top = torch.topk(TestO, 2)
     # print(top)
-    # print(predicted)
-    # print(labels)
+    print(predicted)
+    print(labels)
+
+    imageList = imagefiles(directory)
+    for i in range(0, 10):
+
+        frameDir = directory + '/' + imageList[i]
+        frame = cv2.imread(frameDir)
+        labelDC = int(predicted[i])
+        if labelDC == 0:
+            labelOut = 'Cat'
+        else:
+            labelOut = 'Dog'
+
+        cv2.putText(frame, labelOut, (10, 50), font, 1, (255, 0, 0), 2)
+
+        cv2.imshow('Animal', frame)
+        if cv2.waitKey(1000) & 0xFF == ord('q'):
+            break
