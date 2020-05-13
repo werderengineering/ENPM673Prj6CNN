@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import winsound
 from imageFileNames import *
 import cv2
-
+from imutils import build_montages
 font = cv2.FONT_HERSHEY_SIMPLEX
 
 from __main__ import *
@@ -165,6 +165,7 @@ def testCNN(net, batch_size, epochs, lr, train_loader, test_loader, classes, dir
         TestO = net(inputs)
         _, predicted = torch.max(TestO.data, 1)
 
+
         predicted = np.array(predicted).astype(int)
         labels = np.array(labels).astype(int)
 
@@ -188,18 +189,23 @@ def testCNN(net, batch_size, epochs, lr, train_loader, test_loader, classes, dir
     print(labels)
 
     imageList = imagefiles(directory)
-    for i in range(0, 10):
+    images = []
+    for i in range(20, 46):
 
         frameDir = directory + '/' + imageList[i]
         frame = cv2.imread(frameDir)
+        frame = cv2.resize(frame, (128, 128))
         labelDC = int(predicted[i])
         if labelDC == 0:
             labelOut = 'Cat'
+            cv2.putText(frame, labelOut, (5, 15), font, 0.5, (0, 0, 255), 2)
         else:
             labelOut = 'Dog'
+            cv2.putText(frame, labelOut, (5, 15), font, 0.5, (0, 255, 0), 2)
+        images.append(frame)
+        montage = build_montages(images, (128, 128), (5, 5))[0]
 
-        cv2.putText(frame, labelOut, (10, 50), font, 1, (255, 0, 0), 2)
-
-        cv2.imshow('Animal', frame)
+        cv2.imshow('Animal', montage)
         if cv2.waitKey(1000) & 0xFF == ord('q'):
             break
+
