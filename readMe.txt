@@ -1,5 +1,5 @@
 1. Load all dependecies into local folder with all files unzipped and all subdirectories loaded as intact from unzip.
-	See pictures for reference
+	See pictures 'folders' and 'folders 2' for reference
 2. run ENPM673Proj6.py
 3. Enter the paths of the requested folders
 	3a. Hitting enter will enter the default locations if all directories were unziped and kept in intact folders

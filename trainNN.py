@@ -9,7 +9,9 @@ import winsound
 from imageFileNames import *
 import cv2
 from imutils import build_montages
+
 font = cv2.FONT_HERSHEY_SIMPLEX
+import random
 
 from __main__ import *
 
@@ -165,7 +167,6 @@ def testCNN(net, batch_size, epochs, lr, train_loader, test_loader, classes, dir
         TestO = net(inputs)
         _, predicted = torch.max(TestO.data, 1)
 
-
         predicted = np.array(predicted).astype(int)
         labels = np.array(labels).astype(int)
 
@@ -190,7 +191,10 @@ def testCNN(net, batch_size, epochs, lr, train_loader, test_loader, classes, dir
 
     imageList = imagefiles(directory)
     images = []
-    for i in range(20, 46):
+
+    randval = random.randint(0, len(predicted) - 26)
+
+    for i in range(randval, randval + 26):
 
         frameDir = directory + '/' + imageList[i]
         frame = cv2.imread(frameDir)
@@ -208,4 +212,3 @@ def testCNN(net, batch_size, epochs, lr, train_loader, test_loader, classes, dir
         cv2.imshow('Animal', montage)
         if cv2.waitKey(1000) & 0xFF == ord('q'):
             break
-
