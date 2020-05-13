@@ -36,39 +36,35 @@ prgRun = True
 def main(prgRun):
     if __name__ == '__main__':
 
+        # Soft inputs
+        ###########################################################
+        print('\n', '#' * 100)
+        data_dir = input('Enter the path to the main data folder \nThe Default is ./dogs-vs-cats : ')
+        if data_dir == '':
+            data_dir = './dogs-vs-cats'
+
+        train_dir = input('Enter the path to the train data folder \nThe Default is ./dogs-vs-cats/train : ')
+        if train_dir == '':
+            train_dir = "./dogs-vs-cats/train"
+
+        subdir = input('Enter the sub-path to the training subdirectroy data folder \nThe Default is /train : ')
+        if subdir == '':
+            subdir = '/train'
+
+        test_dir = input(
+            'Enter the path to the test subdirectory data folder \nThe Default is ./dogs-vs-cats/test1/test1 : ')
+        if test_dir == '':
+            test_dir = "./dogs-vs-cats/test1/test1"
+        print('#' * 100, '\n')
+
+        ###########################################################
+
         seed = 1
         np.random.seed(seed)
         torch.manual_seed(seed)
 
         classes = ('0 cat', '1 dog')
 
-        # train_loader = torch.utils.data.DataLoader(
-        #     torchvision.datasets.CIFAR10('./cifardata', train=True, download=True,
-        #                                  transform=transforms.Compose(
-        #                                      [transforms.ToTensor(),
-        #                                       transforms.Normalize((0.5,),
-        #                                                            (0.5,))])),
-        #     batch_size=128, shuffle=True)
-        #
-        # test_loader = torch.utils.data.DataLoader(torchvision.datasets.CIFAR10('./cifardata', train=False,
-        #                                                                        transform=transforms.Compose(
-        #                                                                            [transforms.ToTensor(),
-        #                                                                             transforms.Normalize((0.5,),
-        #                                                                                                  (0.5,))])),
-        #                                           batch_size=64, shuffle=True)
-
-        # train_loader = torch.utils.data.DataLoader(dataset=DCTrain,
-        #                                            batch_size=64,
-        #                                            shuffle=True)
-        #
-        # test_loader = torch.utils.data.DataLoader(dataset=DCTest,
-        #                                           batch_size=64,
-        #                                           shuffle=True)
-        #
-        data_dir = './dogs-vs-cats'
-        train_dir = "./dogs-vs-cats/train"
-        test_dir = "./dogs-vs-cats/test1/test1"
-        subdir = '/train'
         SubDirectories(train_dir, subdir)
 
         # More information the higher the number, max around 230
@@ -101,7 +97,7 @@ def main(prgRun):
         CNN = CNNBuild()
         loadModel = str.lower(input('\nLoad a model? Enter |yes| or |no|: '))
         if loadModel == 'yes' or loadModel == 'y':
-            name = str.lower(input('Enter the entire name: '))
+            name = str.lower(input('Enter the entire file. \nThe Default is model12810x10.1lr.pth: '))
             if name == '':
                 name = 'model12810x10.1lr.pth'
             CNN.load_state_dict(torch.load(name))
